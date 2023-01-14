@@ -343,7 +343,8 @@ function createAllRows(){
                         collection[i].notOk = true;
                     }
                 }else{
-                    if(JSON.stringify(deep_value(collection[i],column.path)).toLowerCase().startsWith(column.input.value.toLowerCase())){
+                    deep_value(collection[i],column.path)
+                    if(JSON.stringify(deep_value(collection[i],column.path)).replace(/['"]+/g, '').toLowerCase().startsWith(column.input.value.toLowerCase()) === true){
                     }else{
                         collection[i].notOk = true;
                     }
@@ -489,7 +490,6 @@ function compareValues(order, type, path) {
         if(type === "string" || type === "object"){
             var bandA;
             var bandB;
-            console.log(a)
                 bandA =  JSON.stringify(Object.byString(a, path)).toUpperCase();
                 bandB = JSON.stringify(Object.byString(b, path)).toUpperCase();
             
