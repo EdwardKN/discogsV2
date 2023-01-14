@@ -408,12 +408,20 @@ function createAllRows(){
 
                 }
                 if(column.type === "object"){
-                    let tmpText = "";
                     deep_value(collection[i],column.path).forEach(text => {
-                        tmpText += text.name + ",";
+                        if(column.name === "Artist"){
+                            thisThing2.innerHTML += text.name.link("https://www.discogs.com/artist/"+collection[i].basic_information.artists[0].id) + ", "
+                            thisThing2.childNodes.forEach(links => {
+                                if(links.nodeName === "A"){
+                                    links.setAttribute("target","_blank")
+                                }
+                            })
+                        }else{
+                            thisThing2.innerHTML += text.name + ", "
+
+                        }
                     })
 
-                    thisThing.innerText = tmpText;
                 }
                 thisThing2.appendChild(thisThing)
                 columns.rows[columns.rows.length-1].appendChild(thisThing2)
