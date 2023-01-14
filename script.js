@@ -267,6 +267,13 @@ function createFirstRows(){
             column.input.setAttribute("onchange","reloadTable()")
             column.input.value = column.lastSearch;
             thisThing2.appendChild(column.input);
+        }else{
+            column.input = document.createElement("button");
+            column.input.innerText = "Rensa filter"
+            column.input.setAttribute("onclick","resetFilters()")
+
+            thisThing2.appendChild(column.input);
+
         }
         columns.rows[1].appendChild(thisThing2)
 
