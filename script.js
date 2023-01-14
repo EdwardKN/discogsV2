@@ -209,6 +209,8 @@ function reloadTable(){
     table.id = "table"
     table.style.width = window.innerWidth;
 
+    document.getElementById("loaded").innerText = table.rows.length-2 + " / " + collection.length;
+
     save()
 }
 
