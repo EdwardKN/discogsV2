@@ -112,6 +112,7 @@ function loadSave(){
         folders = [];
     }
 
+    
 
     reloadTable();
 
@@ -201,7 +202,11 @@ function reload(){
     requestHttp(function(){
         collection.forEach(release => {
             release.basic_information.labels = reduce(release.basic_information.labels,"name")
-            
+            collection.forEach(release =>{
+                if(release.notes == undefined){
+                    release.notes = [{value:0}];
+                }
+            })
         })
 
 
@@ -484,9 +489,9 @@ function compareValues(order, type, path) {
         if(type === "string" || type === "object"){
             var bandA;
             var bandB;
-
-                bandA =  Object.byString(a, path).toUpperCase();
-                bandB = Object.byString(b, path).toUpperCase();
+            console.log(a)
+                bandA =  JSON.stringify(Object.byString(a, path)).toUpperCase();
+                bandB = JSON.stringify(Object.byString(b, path)).toUpperCase();
             
             
             if (bandA > bandB) {
