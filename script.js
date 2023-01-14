@@ -357,6 +357,12 @@ function createAllRows(){
                         for(let y=0; y<collection[i].rating;y++){
                             thisThing.innerText += "★"; 
                         }
+                    }else if(column.name === "Mapp"){
+                        folders.forEach(folder => {
+                            if(folder.id === deep_value(collection[i],column.path)){
+                                thisThing.innerText = folder.name;
+                            }
+                        })
                     }else{
                         thisThing.innerText = deep_value(collection[i],column.path);
                         if(column.name === "Titel"){
