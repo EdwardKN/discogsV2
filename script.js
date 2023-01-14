@@ -337,7 +337,7 @@ function createAllRows(){
                 collection[i].notOk = true;
             }
         })
-        }catch(e){console.log(e)};   
+        }catch(e){};   
         if(collection[i].notOk != true){
             columns.rows.push(document.createElement("tr"));
             columns.row.forEach(column => {
@@ -396,6 +396,15 @@ function createAllRows(){
             }
         }
     }
+}
+function resetFilters(){
+    columns.row.forEach(column => {
+        try{
+            column.lastSearch = "";
+            column.input.value = "";
+            reloadTable();
+        }catch{}
+    })
 }
 
 function deep_value(obj, path){
@@ -495,7 +504,6 @@ var reduce = function(arr, prop) {
         filters   = result.filter(filterByVal);
         if (filters.length === 0) result.push(arr[i]);
     }
-    console.log(result)
 
     return result;
 
