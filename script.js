@@ -348,9 +348,9 @@ function createAllRows(){
         if(collection[i].notOk != true){
             columns.rows.push(document.createElement("tr"));
             columns.row.forEach(column => {
-
                 
-                let thisThing = document.createElement("td");
+                let thisThing = document.createElement("a");
+                let thisThing2 = document.createElement("td");
                 column.rows.push(thisThing);
                 if(column.type === "string" || column.type === "number"){
                     if(column.name === "Betyg"){
@@ -359,6 +359,10 @@ function createAllRows(){
                         }
                     }else{
                         thisThing.innerText = deep_value(collection[i],column.path);
+                        if(column.name === "Titel"){
+                            thisThing.setAttribute("href",  "https://www.discogs.com/release/"+collection[i].basic_information.id);
+                            thisThing.setAttribute("target","_blank")
+                        }
                     }
                 }
                 if(column.type === "img"){
@@ -366,7 +370,11 @@ function createAllRows(){
                     image.src = deep_value(collection[i],column.path);
                     image.style.height = '100px';
                     image.style.width = '100px';
+                    image.setAttribute("onclick",`window.open("https://www.discogs.com/master/${collection[i].basic_information.master_id}", '_blank')`)
+
+                    
                     thisThing.appendChild(image);
+
                 }
                 if(column.type === "object"){
                     let tmpText = "";
@@ -376,7 +384,8 @@ function createAllRows(){
 
                     thisThing.innerText = tmpText;
                 }
-                columns.rows[columns.rows.length-1].appendChild(thisThing)
+                thisThing2.appendChild(thisThing)
+                columns.rows[columns.rows.length-1].appendChild(thisThing2)
                 table.appendChild(columns.rows[columns.rows.length-1]);
                 
             })
