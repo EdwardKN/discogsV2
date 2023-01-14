@@ -410,7 +410,7 @@ function createAllRows(){
                 if(column.type === "object"){
                     deep_value(collection[i],column.path).forEach(text => {
                         if(column.name === "Artist"){
-                            thisThing2.innerHTML += text.name.link("https://www.discogs.com/artist/"+collection[i].basic_information.artists[0].id) + ", "
+                            thisThing2.innerHTML += text.name.link("https://www.discogs.com/artist/"+text.id) + ", "
                             thisThing2.childNodes.forEach(links => {
                                 if(links.nodeName === "A"){
                                     links.setAttribute("target","_blank")
