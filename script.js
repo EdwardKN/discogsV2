@@ -357,6 +357,8 @@ function createAllRows(){
                         for(let y=0; y<collection[i].rating;y++){
                             thisThing.innerText += "★"; 
                         }
+                    }else if(column.name === "Datum tillagd"){
+                        thisThing.innerText = deep_value(collection[i],column.path).split("T")[0];
                     }else if(column.name === "Mapp"){
                         folders.forEach(folder => {
                             if(folder.id === deep_value(collection[i],column.path)){
