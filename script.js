@@ -172,8 +172,28 @@ function requestHttp(httpCallback){
     })
 
 }
+function startLoading(){
+    document.getElementById("loading").style.width = "50%"
+    document.getElementById("reload").disabled = true;
+    columns.row.forEach(column => {
+        try{column.lastSearch = document.getElementById(column.name).value}catch{};
+    })
+    customNotes.fields.forEach(note => {
+        try{note.lastSearch = document.getElementById(note.name).value}catch{};
+    })
+    if(table !== undefined){
+        document.getElementsByTagName('body')[0].removeChild(table);
+        table = undefined;
+    }
+
+}
+function stopLoading(){
+    document.getElementById("loading").style.width = "0%"
+    document.getElementById("reload").disabled = false;
+}
 
 function reload(){
+    startLoading();
     customNotes = {fields:[]};
     value = undefined;
     folders = undefined;
@@ -189,6 +209,7 @@ function reload(){
     });
 }
 function reloadTable(){
+
     columns.row.forEach(column => {
         try{column.lastSearch = document.getElementById(column.name).value}catch{};
     })
@@ -212,6 +233,7 @@ function reloadTable(){
     document.getElementById("loaded").innerText = table.rows.length-2 + " / " + collection.length;
 
     save()
+    stopLoading();
 }
 
 function createFirstRows(){
@@ -378,6 +400,7 @@ function createAllRows(){
                     image.src = deep_value(collection[i],column.path);
                     image.style.height = '100px';
                     image.style.width = '100px';
+                    image.id = "img"
                     image.setAttribute("onclick",`window.open("https://www.discogs.com/master/${collection[i].basic_information.master_id}", '_blank')`)
 
                     
@@ -421,7 +444,9 @@ function createAllRows(){
         }
     }
 }
+
 function resetFilters(){
+    startLoading()
     columns.row.forEach(column => {
         try{
             column.lastSearch = "";
@@ -533,3 +558,5 @@ var reduce = function(arr, prop) {
 
     
   };
+
+
