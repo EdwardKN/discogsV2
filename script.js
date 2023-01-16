@@ -414,20 +414,21 @@ function createAllRows(){
 
                 }
                 if(column.type === "object"){
-                    deep_value(collection[i],column.path).forEach(text => {
+                    deep_value(collection[i],column.path).forEach(function(text, idx){
                         if(column.name === "Artist"){
-                            thisThing2.innerHTML += text.name.link("https://www.discogs.com/artist/"+text.id) + ", "
+                            thisThing2.innerHTML += text.name.link("https://www.discogs.com/artist/"+text.id)
                             thisThing2.childNodes.forEach(links => {
                                 if(links.nodeName === "A"){
                                     links.setAttribute("target","_blank")
                                 }
                             })
                         }else{
-                            thisThing2.innerHTML += text.name + ", "
-
+                            thisThing2.innerHTML += text.name;
+                        }
+                        if(idx !== deep_value(collection[i],column.path).length-1){
+                            thisThing2.innerHTML +=  ", "
                         }
                     })
-
                 }
                 thisThing2.appendChild(thisThing)
                 columns.rows[columns.rows.length-1].appendChild(thisThing2)
