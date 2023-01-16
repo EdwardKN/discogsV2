@@ -105,6 +105,7 @@ function loadSave(){
     document.getElementById("username").value = JSON.parse(localStorage.getItem("username"));
     document.getElementById("token").value = JSON.parse(localStorage.getItem("token"));
     customNotes = JSON.parse(localStorage.getItem("notes"));
+    value = JSON.parse(localStorage.getItem("worth"));
 
     if(collection === null){
         collection = [];
@@ -151,6 +152,11 @@ function requestHttp(httpCallback){
         })
         httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/value?token="+document.getElementById('token').value,function(c){
             value = c;
+
+            value.avg = value.median.replace('SEK', '');
+            value.avg = value.avg.split(".")[0].replace(",",".")
+            value.avg = value.avg.replace('.', '');
+            value.avg = JSON.parse(value.avg);
             httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/folders?token="+document.getElementById('token').value,function(callbackThing){
                 folders = callbackThing.folders;
 
@@ -200,6 +206,7 @@ function reload(){
     folders = undefined;
     collection = [];
     requestHttp(function(){
+        value.avg = value.avg / collection.length;
         collection.forEach(release => {
             release.basic_information.labels = reduce(release.basic_information.labels,"name")
             collection.forEach(release =>{
@@ -235,7 +242,8 @@ function reloadTable(){
     table.id = "table"
     table.style.width = window.innerWidth;
 
-    document.getElementById("loaded").innerText = table.rows.length-2 + " / " + collection.length;
+    
+    document.getElementById("loaded").innerText = table.rows.length-2 + " / " + collection.length + '\u00a0'.repeat(10) + "Min:" + value.minimum.split(".")[0].replace(",",".") + '\u00a0'.repeat(10) +"Med:" + value.median.split(".")[0].replace(",",".") + '\u00a0'.repeat(10) +"Max:" + value.maximum.split(".")[0].replace(",",".") + '\u00a0'.repeat(10) +"Avg:SEK" + value.avg.toFixed(3);
 
     save()
     stopLoading();
