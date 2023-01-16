@@ -133,7 +133,7 @@ function httpRequest(url, callback, headers){
         if(http.readyState=== 4){
             if(e.currentTarget.status !== 200){
                 alert("Username, token eller nåt annat skit är fel?!");
-                window.location.reload(true);
+                location.href = './login.html';
             }else{
                 callback(JSON.parse(http.responseText));
             };
