@@ -81,6 +81,9 @@ var value;
 var folders;
 var collection = [];
 
+var username;
+var token;
+
 
 window.addEventListener("load",function(){
     if(localStorage.getItem("collection") == 'undefined'){
@@ -93,27 +96,31 @@ window.addEventListener("load",function(){
 function save(){
     localStorage.setItem("collection", JSON.stringify(collection));
     localStorage.setItem("folders", JSON.stringify(folders));
-    localStorage.setItem("username",JSON.stringify(document.getElementById("username").value));
-    localStorage.setItem("token",JSON.stringify(document.getElementById("token").value));
     localStorage.setItem("notes",JSON.stringify(customNotes));
     localStorage.setItem("worth",JSON.stringify(value));
 };
 function loadSave(){
-
-    collection = JSON.parse(localStorage.getItem("collection"));
-    folders = JSON.parse(localStorage.getItem("folders"));
-    document.getElementById("username").value = JSON.parse(localStorage.getItem("username"));
-    document.getElementById("token").value = JSON.parse(localStorage.getItem("token"));
-    customNotes = JSON.parse(localStorage.getItem("notes"));
-    value = JSON.parse(localStorage.getItem("worth"));
-
-    if(collection === null){
-        collection = [];
-        customNotes = {fields:[]};
-        folders = [];
-    };
-
-    reloadTable();
+    
+    if(JSON.parse(localStorage.getItem("load"))){
+        localStorage.setItem("load","false");
+        username = (localStorage.getItem("username"));
+        token = (localStorage.getItem("token"));
+        reload();
+    }else{
+        collection = JSON.parse(localStorage.getItem("collection"));
+        folders = JSON.parse(localStorage.getItem("folders"));
+        customNotes = JSON.parse(localStorage.getItem("notes"));
+        value = JSON.parse(localStorage.getItem("worth"));
+    
+        if(collection === null){
+            location.href = './login.html';
+            collection = [];
+            customNotes = {fields:[]};
+            folders = [];
+        }else{
+            reloadTable();
+        };
+    }
 };
 
 function httpRequest(url, callback, headers){
@@ -137,25 +144,25 @@ function httpRequest(url, callback, headers){
 };
 
 function requestHttp(httpCallback){
-    httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/fields?token="+document.getElementById('token').value,function(c){
+    httpRequest("https://api.discogs.com/users/"+username+"/collection/fields?token="+token,function(c){
         customNotes = c;  
         customNotes.fields.forEach(note =>{
             note.lastSearch = "";
         });
-        httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/value?token="+document.getElementById('token').value,function(c){
+        httpRequest("https://api.discogs.com/users/"+username+"/collection/value?token="+token,function(c){
             value = c;
 
             value.avg = value.median.replace('SEK', '');
             value.avg = value.avg.split(".")[0].replace(",",".");
             value.avg = value.avg.replace('.', '');
             value.avg = JSON.parse(value.avg);
-            httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/folders?token="+document.getElementById('token').value,function(callbackThing){
+            httpRequest("https://api.discogs.com/users/"+username+"/collection/folders?token="+token,function(callbackThing){
                 folders = callbackThing.folders;
 
                 let tmp = 0;
                 for(i = 0; i<  Math.ceil(folders[0].count/100);i++){
 
-                    httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+`/collection/folders/0/releases?page=${i+1}&per_page=100&token=`+document.getElementById('token').value,function(callback){
+                    httpRequest("https://api.discogs.com/users/"+username+`/collection/folders/0/releases?page=${i+1}&per_page=100&token=`+token,function(callback){
                         tmp++;
                         let newColection = collection.concat(callback.releases);
                         collection = newColection;
@@ -173,7 +180,7 @@ function requestHttp(httpCallback){
 
 function startLoading(){
     document.getElementById("loading").style.width = "50%";
-    document.getElementById("reload").disabled = true;
+    document.getElementById("reload").style.visibility = "hidden";
     columns.row.forEach(column => {
         try{column.lastSearch = document.getElementById(column.name).value}catch{};
     });
@@ -188,7 +195,7 @@ function startLoading(){
 
 function stopLoading(){
     document.getElementById("loading").style.width = "0%";
-    document.getElementById("reload").disabled = false;
+    document.getElementById("reload").style.visibility = "visible";
 };
 
 function reload(){
@@ -437,6 +444,8 @@ function createAllRows(){
     };
 };
 
+
+
 function resetFilters(){
     startLoading();
     columns.row.forEach(column => {
@@ -547,3 +556,18 @@ var reduce = function(arr, prop) {
   };
 
 
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
