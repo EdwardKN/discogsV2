@@ -72,7 +72,7 @@ var columns = {
             filterAlgorithm:"Includes"
         }
     ]
-}
+};
 
 var table;
 
@@ -87,17 +87,17 @@ window.addEventListener("load",function(){
         load();
     }else{
         loadSave();
-    }
+    };
 });
 
 function save(){
     localStorage.setItem("collection", JSON.stringify(collection));
     localStorage.setItem("folders", JSON.stringify(folders));
-    localStorage.setItem("username",JSON.stringify(document.getElementById("username").value))
-    localStorage.setItem("token",JSON.stringify(document.getElementById("token").value))
-    localStorage.setItem("notes",JSON.stringify(customNotes))
-    localStorage.setItem("worth",JSON.stringify(value))
-}
+    localStorage.setItem("username",JSON.stringify(document.getElementById("username").value));
+    localStorage.setItem("token",JSON.stringify(document.getElementById("token").value));
+    localStorage.setItem("notes",JSON.stringify(customNotes));
+    localStorage.setItem("worth",JSON.stringify(value));
+};
 function loadSave(){
 
     collection = JSON.parse(localStorage.getItem("collection"));
@@ -111,50 +111,42 @@ function loadSave(){
         collection = [];
         customNotes = {fields:[]};
         folders = [];
-    }
-
-    
+    };
 
     reloadTable();
-
-}
+};
 
 function httpRequest(url, callback, headers){
 
     const http = new XMLHttpRequest();   
     http.open("GET", url);
 
-    /*headers.forEach(header => {
-        http.setRequestHeader(header.key, header.value);
-    })*/
-
     http.send();
     http.onreadystatechange=(e)=>{
-
         if(http.readyState=== 4){
-
             if(e.currentTarget.status !== 200){
-                alert("Username, token eller nåt annat skit är fel?!")
-                //window.location.reload(true)
+                alert("Username, token eller nåt annat skit är fel?!");
+                window.location.reload(true);
             }else{
-                callback(JSON.parse(http.responseText))
-            }
-        }
+                callback(JSON.parse(http.responseText));
+            };
+        };
         
-    }
+    };
     
-}
+};
+
 function requestHttp(httpCallback){
     httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/fields?token="+document.getElementById('token').value,function(c){
         customNotes = c;  
         customNotes.fields.forEach(note =>{
             note.lastSearch = "";
-        })
+        });
         httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/value?token="+document.getElementById('token').value,function(c){
             value = c;
 
             value.avg = value.median.replace('SEK', '');
-            value.avg = value.avg.split(".")[0].replace(",",".")
+            value.avg = value.avg.split(".")[0].replace(",",".");
             value.avg = value.avg.replace('.', '');
             value.avg = JSON.parse(value.avg);
             httpRequest("https://api.discogs.com/users/"+document.getElementById('username').value+"/collection/folders?token="+document.getElementById('token').value,function(callbackThing){
@@ -171,33 +163,33 @@ function requestHttp(httpCallback){
                         if(tmp === Math.ceil(folders[0].count/100)){
                             httpCallback();
                             
-                        }
-                    })
-                }
-            })
-        })
-    })
+                        };
+                    });
+                };
+            });
+        });
+    });
+};
 
-}
 function startLoading(){
-    document.getElementById("loading").style.width = "50%"
+    document.getElementById("loading").style.width = "50%";
     document.getElementById("reload").disabled = true;
     columns.row.forEach(column => {
         try{column.lastSearch = document.getElementById(column.name).value}catch{};
-    })
+    });
     customNotes.fields.forEach(note => {
         try{note.lastSearch = document.getElementById(note.name).value}catch{};
-    })
+    });
     if(table !== undefined){
         document.getElementsByTagName('body')[0].removeChild(table);
         table = undefined;
-    }
+    };
+};
 
-}
 function stopLoading(){
-    document.getElementById("loading").style.width = "0%"
+    document.getElementById("loading").style.width = "0%";
     document.getElementById("reload").disabled = false;
-}
+};
 
 function reload(){
     startLoading();
@@ -208,30 +200,28 @@ function reload(){
     requestHttp(function(){
         value.avg = value.avg / collection.length;
         collection.forEach(release => {
-            release.basic_information.labels = reduce(release.basic_information.labels,"name")
+            release.basic_information.labels = reduce(release.basic_information.labels,"name");
             collection.forEach(release =>{
                 if(release.notes == undefined){
                     release.notes = [{value:0}];
-                }
-            })
-        })
-
-
+                };
+            });
+        });
         reloadTable();
     });
-}
-function reloadTable(){
+};
 
+function reloadTable(){
     columns.row.forEach(column => {
         try{column.lastSearch = document.getElementById(column.name).value}catch{};
-    })
+    });
     customNotes.fields.forEach(note => {
         try{note.lastSearch = document.getElementById(note.name).value}catch{};
-    })
+    });
     if(table !== undefined){
         document.getElementsByTagName('body')[0].removeChild(table);
         table = undefined;
-    }
+    };
     
     table = document.createElement("table");
 
@@ -239,13 +229,13 @@ function reloadTable(){
     createAllRows();
 
     document.getElementsByTagName('body')[0].appendChild(table);
-    table.id = "table"
+    table.id = "table";
     table.style.width = window.innerWidth;
 
     
     document.getElementById("loaded").innerText = table.rows.length-2 + " / " + collection.length + '\u00a0'.repeat(10) + "Min:" + value.minimum.split(".")[0].replace(","," ") + '\u00a0'.repeat(10) +"Med:" + value.median.split(".")[0].replace(","," ") + '\u00a0'.repeat(10) +"Max:" + value.maximum.split(".")[0].replace(","," ") + '\u00a0'.repeat(10) +"Avg:SEK" + value.avg.toFixed(3);
 
-    save()
+    save();
     stopLoading();
 }
 
@@ -257,34 +247,33 @@ function createFirstRows(){
     columns.row.forEach(column => {
         column.rows = [];
         let thisThing = document.createElement("td");
-        thisThing.setAttribute("onclick",`sortCollection('${column.path}','${column.type}','${column.objectPath}')`)
+        thisThing.setAttribute("onclick",`sortCollection('${column.path}','${column.type}','${column.objectPath}')`);
 
         column.rows.push(thisThing);
         thisThing.innerText = column.name;
-        columns.rows[0].appendChild(thisThing)
+        columns.rows[0].appendChild(thisThing);
 
         let thisThing2 = document.createElement("td");
         column.rows.push(thisThing2);
         if(column.filterType !== "none"){
             if(column.filterType === "text"){
                 column.input = document.createElement("input");
-                column.input.setAttribute("type","text")
+                column.input.setAttribute("type","text");
             }else{
                 column.input = document.createElement("select");
                 if(column.name === "Mapp"){
                     if(column.lastSearch === ''){
-                        column.lastSearch = '0'
-                    }
+                        column.lastSearch = '0';
+                    };
                     folders.forEach(folder => {
                         folder.option = document.createElement("option");
                         folder.option.value = folder.id;
                         folder.option.text = folder.name + "(" + folder.count + ")";
                         column.input.appendChild(folder.option);
-                    })
-
+                    });
                 }else if(column.name === "Betyg"){
                     for(i=0;i<7;i++){
-                        let ranking = document.createElement("option")
+                        let ranking = document.createElement("option");
                         ranking.value = i-1;
                         let sting = "";
 
@@ -293,51 +282,46 @@ function createFirstRows(){
                         }
                         ranking.text = sting;
 
-                        if(ranking.value == -1){ranking.value = '';ranking.text = "Alla"}
+                        if(ranking.value == -1){ranking.value = '';ranking.text = "Alla"};
                         column.input.appendChild(ranking);
-    }
-                }
-            }
-            column.input.setAttribute("id",column.name)
-            column.input.setAttribute("onchange","reloadTable()")
+                    };
+                };
+            };
+            column.input.setAttribute("id",column.name);
+            column.input.setAttribute("onchange","reloadTable()");
             column.input.value = column.lastSearch;
             thisThing2.appendChild(column.input);
         }else{
             column.input = document.createElement("button");
-            column.input.innerText = "Rensa filter"
-            column.input.setAttribute("onclick","resetFilters()")
+            column.input.innerText = "Rensa filter";
+            column.input.setAttribute("onclick","resetFilters()");
 
             thisThing2.appendChild(column.input);
+        };
+        columns.rows[1].appendChild(thisThing2);
 
-        }
-        columns.rows[1].appendChild(thisThing2)
-
-    })
+    });
     for(let i = 0; i< customNotes.fields.length; i++){
 
         let thisThing = document.createElement("td");
         thisThing.innerText = customNotes.fields[i].name;
-        thisThing.setAttribute("onclick",`sortCollection('notes[${i}].value','string','')`)
+        thisThing.setAttribute("onclick",`sortCollection('notes[${i}].value','string','')`);
 
         let thisThing2 = document.createElement("td");
         customNotes.fields[i].input = document.createElement("input");
-        customNotes.fields[i].input.setAttribute("type","text")
-        customNotes.fields[i].input.setAttribute("id",customNotes.fields[i].name)
-        customNotes.fields[i].input.setAttribute("onchange","reloadTable()")
+        customNotes.fields[i].input.setAttribute("type","text");
+        customNotes.fields[i].input.setAttribute("id",customNotes.fields[i].name);
+        customNotes.fields[i].input.setAttribute("onchange","reloadTable()");
         customNotes.fields[i].input.value = customNotes.fields[i].lastSearch;
         thisThing2.appendChild(customNotes.fields[i].input);
 
-        columns.rows[1].appendChild(thisThing2)
+        columns.rows[1].appendChild(thisThing2);
 
-        columns.rows[0].appendChild(thisThing)
-    }
-
-    
-    
-
+        columns.rows[0].appendChild(thisThing);
+    };
     table.appendChild(columns.rows[0]);
     table.appendChild(columns.rows[1]);
-}
+};
 
 function createAllRows(){
     for(i = 0; i < collection.length;i++){
@@ -349,37 +333,29 @@ function createAllRows(){
                     if(JSON.stringify(deep_value(collection[i],column.path)).toLowerCase().includes(column.input.value.toLowerCase())){
                     }else{
                         collection[i].notOk = true;
-                    }
+                    };
                 }else{
-                    deep_value(collection[i],column.path)
+                    deep_value(collection[i],column.path);
                     if(JSON.stringify(deep_value(collection[i],column.path)).replace(/['"]+/g, '').toLowerCase().startsWith(column.input.value.toLowerCase()) === true){
                     }else{
                         collection[i].notOk = true;
-                    }
-                }
-                
+                    };
+                };
             }else if(column.filterType === "select"){
-                if(column.input.value == deep_value(collection[i],column.path)){ 
-
-                }else{
-                    if(column.name === "Betyg" && column.input.value == ''){
-                    }else{
-                        if(column.name === "Mapp" && column.input.value == '0'){
-                            
-                        }else{
+                if(column.input.value == deep_value(collection[i],column.path)){}else{
+                    if(column.name === "Betyg" && column.input.value == ''){}else{
+                        if(column.name === "Mapp" && column.input.value == '0'){}else{
                             collection[i].notOk = true;
-
-                        }
-                    }
-                }
-            }
-        })
+                        };
+                    };
+                };
+            };
+        });
         customNotes.fields.forEach(note => {
-            if((collection[i].notes[note.id-1].value.toLowerCase().startsWith(note.input.value.toLowerCase()))){
-            }else{
+            if((collection[i].notes[note.id-1].value.toLowerCase().startsWith(note.input.value.toLowerCase()))){}else{
                 collection[i].notOk = true;
-            }
-        })
+            };
+        });
         }catch(e){};   
         if(collection[i].notOk != true){
             columns.rows.push(document.createElement("tr"));
@@ -392,92 +368,85 @@ function createAllRows(){
                     if(column.name === "Betyg"){
                         for(let y=0; y<collection[i].rating;y++){
                             thisThing.innerText += "★"; 
-                        }
+                        };
                     }else if(column.name === "Datum tillagd"){
                         thisThing.innerText = deep_value(collection[i],column.path).split("T")[0];
                     }else if(column.name === "Mapp"){
                         folders.forEach(folder => {
                             if(folder.id === deep_value(collection[i],column.path)){
                                 thisThing.innerText = folder.name;
-                            }
-                        })
+                            };
+                        });
                     }else{
                         thisThing.innerText = deep_value(collection[i],column.path);
                         if(column.name === "Titel"){
                             thisThing.setAttribute("href",  "https://www.discogs.com/release/"+collection[i].basic_information.id);
-                            thisThing.setAttribute("target","_blank")
-                        }
-                    }
-                }
+                            thisThing.setAttribute("target","_blank");
+                        };
+                    };
+                };
                 if(column.type === "img"){
-                    let image = document.createElement("img")
+                    let image = document.createElement("img");
                     image.src = deep_value(collection[i],column.path);
                     image.style.height = '100px';
                     image.style.width = '100px';
-                    image.id = "img"
-                    image.setAttribute("onclick",`window.open("https://www.discogs.com/master/${collection[i].basic_information.master_id}", '_blank')`)
+                    image.id = "img";
+                    image.setAttribute("onclick",`window.open("https://www.discogs.com/master/${collection[i].basic_information.master_id}", '_blank')`);
 
-                    
                     thisThing.appendChild(image);
-
-                }
+                };
                 if(column.type === "object"){
                     deep_value(collection[i],column.path).forEach(function(text, idx){
                         if(column.name === "Artist"){
-                            thisThing2.innerHTML += text.name.link("https://www.discogs.com/artist/"+text.id)
+                            thisThing2.innerHTML += text.name.link("https://www.discogs.com/artist/"+text.id);
                             thisThing2.childNodes.forEach(links => {
                                 if(links.nodeName === "A"){
-                                    links.setAttribute("target","_blank")
-                                }
-                            })
+                                    links.setAttribute("target","_blank");
+                                };
+                            });
                         }else{
                             thisThing2.innerHTML += text.name;
                         }
                         if(idx !== deep_value(collection[i],column.path).length-1){
-                            thisThing2.innerHTML +=  ", "
-                        }
-                    })
-                }
-                thisThing2.appendChild(thisThing)
-                columns.rows[columns.rows.length-1].appendChild(thisThing2)
+                            thisThing2.innerHTML +=  ", ";
+                        };
+                    });
+                };
+                thisThing2.appendChild(thisThing);
+                columns.rows[columns.rows.length-1].appendChild(thisThing2);
                 table.appendChild(columns.rows[columns.rows.length-1]);
-                
-            })
+            });
             for(let g = 0; g<customNotes.fields.length;g++){
-
                 try{
                     if(collection[i].notes[g].field_id-1 == g){
                     }else{
-                        collection[i].notes.insert(g,{value:"-",field_id:g+1})
+                        collection[i].notes.insert(g,{value:"-",field_id:g+1});
                     }
-                }catch{}
-                
+                }catch{};
                 let thisThing = document.createElement("td");
                 try{
                     if(collection[i].notes[g].field_id - 1 === g){
                         thisThing.innerText = collection[i].notes[g].value;
-                    }else{
-                    }
-                }catch(e){}
-                
-
-                columns.rows[columns.rows.length-1].appendChild(thisThing)
+                    };
+                }catch(e){};
+            
+                columns.rows[columns.rows.length-1].appendChild(thisThing);
                 table.appendChild(columns.rows[columns.rows.length-1]);
-            }
-        }
-    }
-}
+            };
+        };
+    };
+};
 
 function resetFilters(){
-    startLoading()
+    startLoading();
     columns.row.forEach(column => {
         try{
             column.lastSearch = "";
             column.input.value = "";
             reloadTable();
-        }catch{}
-    })
-}
+        }catch{};
+    });
+};
 
 function deep_value(obj, path){
     for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
@@ -497,31 +466,28 @@ function compareValues(order, type, path) {
         
         let comparison = 0;
         if(type === "string" || type === "object"){
-            var bandA;
-            var bandB;
-                bandA =  JSON.stringify(Object.byString(a, path)).toUpperCase();
-                bandB = JSON.stringify(Object.byString(b, path)).toUpperCase();
+            var bandA =  JSON.stringify(Object.byString(a, path)).toUpperCase();
+            var bandB = JSON.stringify(Object.byString(b, path)).toUpperCase();
             
             
             if (bandA > bandB) {
             comparison = 1;
             } else if (bandA < bandB) {
             comparison = -1;
-            }
+            };
         }else{
-            const bandA =  Object.byString(a, path)
-            const bandB = Object.byString(b, path)
-            
+            const bandA =  Object.byString(a, path);
+            const bandB = Object.byString(b, path);
             if (bandA > bandB) {
             comparison = 1;
             } else if (bandA < bandB) {
             comparison = -1;
-            }
-        }
+            };
+        };
 
         return comparison * order;
-    }
-    }
+    };
+};
 
   var lastPath = "";
   var sortOrder = 1;
@@ -535,19 +501,20 @@ function compareValues(order, type, path) {
             sortOrder = 1;
         }else{
             sortOrder = -1;
-        }
-    }
+        };
+    };
     if(type === "object"){
         path = path+"[0]."+objectpath;
-    }
+    };
 
     if(path === "basic_information.genres"){
-        path =  "basic_information.genres[0]"
-    }
+        path =  "basic_information.genres[0]";
+    };
 
     collection.sort(compareValues(sortOrder,type,path,objectpath));
-    reloadTable()
-  }
+    reloadTable();
+  };
+
   Object.byString = function(o, s) {
     s = s.replace(/\[(\w+)\]/g, '.$1');
     s = s.replace(/^\./, '');           
@@ -558,10 +525,10 @@ function compareValues(order, type, path) {
             o = o[k];
         } else {
             return;
-        }
-    }
+        };
+    };
     return o;
-}
+};
 
 var reduce = function(arr, prop) {
     var result = [],
@@ -577,8 +544,6 @@ var reduce = function(arr, prop) {
     }
 
     return result;
-
-    
   };
 
 
