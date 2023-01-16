@@ -240,7 +240,7 @@ function reloadTable(){
     table.style.width = window.innerWidth;
 
     
-    document.getElementById("loaded").innerText = table.rows.length-2 + " / " + collection.length + '\u00a0'.repeat(10) + "Min:" + value.minimum.split(".")[0].replace(","," ") + '\u00a0'.repeat(10) +"Med:" + value.median.split(".")[0].replace(","," ") + '\u00a0'.repeat(10) +"Max:" + value.maximum.split(".")[0].replace(","," ") + '\u00a0'.repeat(10) +"Avg:SEK" + value.avg.toFixed(3);
+    document.getElementById("loaded").innerText = table.rows.length-2 + " / " + collection.length + '\u00a0'.repeat(10) + "Min:" + value.minimum.split(".")[0] + '\u00a0'.repeat(10) +"Med:" + value.median.split(".")[0] + '\u00a0'.repeat(10) +"Max:" + value.maximum.split(".")[0] + '\u00a0'.repeat(10) +"Avg:SEK" + value.avg.toFixed(3);
 
     save();
     stopLoading();
