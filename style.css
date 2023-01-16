@@ -75,6 +75,5 @@ a:link , a:visited {
     right: 10px;
   }
 h1{
-  left:10px;
-  position:relative;
+  padding-left: 10px;
 }
