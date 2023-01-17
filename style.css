@@ -55,22 +55,6 @@ a:link , a:visited {
     transform: translate(-50%, -50%);    
   }
 
-
-
-
-  #reload{
-    width: 25%;
-    cursor: pointer;
-    padding: 15px;
-    font-family: inherit;
-    font-size: 16px;
-    border: 1;
-    border-radius: 10px;
-    margin: 0 auto;
-    display: block;
-
-
-  }
 h1{
   padding-left: 10px;
 }

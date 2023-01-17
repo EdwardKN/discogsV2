@@ -265,10 +265,18 @@ function createFirstRows(){
         if(column.filterType !== "none"){
             thisThing.setAttribute("onclick",`sortCollection('${column.path}','${column.type}','${column.objectPath}')`);
         }
+        if(column.name == "Skivomslag"){
+            let tmpbutton = document.createElement("button")
+            tmpbutton.innerText = "Ladda om"
+            tmpbutton.setAttribute("onclick",`location.href = './login.html';`);
 
-        column.rows.push(thisThing);
-        thisThing.innerText = column.name;
+            thisThing.appendChild(tmpbutton);
+        }else{
+            column.rows.push(thisThing);
+            thisThing.innerText = column.name;
+        }
         columns.rows[0].appendChild(thisThing);
+
 
         let thisThing2 = document.createElement("td");
         column.rows.push(thisThing2);
