@@ -31,7 +31,7 @@ var columns = {
             input:"",
             filterAlgorithm:"StartsWith"
         },{
-            name:"År",
+            name:"Pressningsår",
             type:"number",
             path:"basic_information.year",
             filterType:"text",
