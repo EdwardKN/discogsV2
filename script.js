@@ -47,7 +47,7 @@ var columns = {
             input:"",
         },{
             name:"Genre",
-            type:"string",
+            type:"array",
             path:"basic_information.genres",
             filterType:"text",
             lastSearch:"",
@@ -55,7 +55,7 @@ var columns = {
             filterAlgorithm:"Includes"
         },{
             name:"Stil",
-            type:"string",
+            type:"array",
             path:"basic_information.styles",
             filterType:"text",
             lastSearch:"",
@@ -425,7 +425,21 @@ function createAllRows(){
                         thisThing.innerText = deep_value(collection[i],column.path);
                     };
                 };
+                if(column.type === "array"){
+                    deep_value(collection[i],column.path).forEach(function(text, idx){
+                            thisThing2.innerHTML += text.link("#");
 
+                            thisThing2.childNodes.forEach(links => {
+                                if(links.nodeName === "A"){
+                                    links.setAttribute("onclick",  'document.getElementById("'+column.name+'").value = this.innerText;reloadTable()'); 
+                                };
+                            });
+
+                        if(idx !== deep_value(collection[i],column.path).length-1){
+                            thisThing2.innerHTML +=  ", ";
+                        };
+                    });
+                };
                 if(column.type === "object"){
                     deep_value(collection[i],column.path).forEach(function(text, idx){
                         if(column.name === "Artist"){
@@ -436,7 +450,12 @@ function createAllRows(){
                                 };
                             });
                         }else{
-                            thisThing2.innerHTML += text.name;
+                            thisThing2.innerHTML += text.name.link("#");
+                            thisThing2.childNodes.forEach(links => {
+                                if(links.nodeName === "A"){
+                                    links.setAttribute("onclick",  'document.getElementById("'+column.name+'").value = this.innerText;reloadTable()'); 
+                                };
+                            });
                         }
                         if(idx !== deep_value(collection[i],column.path).length-1){
                             thisThing2.innerHTML +=  ", ";
