@@ -54,6 +54,14 @@ var columns = {
             input:"",
             filterAlgorithm:"Includes"
         },{
+            name:"Stil",
+            type:"string",
+            path:"basic_information.styles",
+            filterType:"text",
+            lastSearch:"",
+            input:"",
+            filterAlgorithm:"Includes"
+        },{
             name:"Label",
             type:"object",
             path:"basic_information.labels",
@@ -254,7 +262,9 @@ function createFirstRows(){
     columns.row.forEach(column => {
         column.rows = [];
         let thisThing = document.createElement("td");
-        thisThing.setAttribute("onclick",`sortCollection('${column.path}','${column.type}','${column.objectPath}')`);
+        if(column.filterType !== "none"){
+            thisThing.setAttribute("onclick",`sortCollection('${column.path}','${column.type}','${column.objectPath}')`);
+        }
 
         column.rows.push(thisThing);
         thisThing.innerText = column.name;
@@ -395,8 +405,8 @@ function createAllRows(){
                 if(column.type === "img"){
                     let image = document.createElement("img");
                     image.src = deep_value(collection[i],column.path);
-                    image.style.height = '100px';
-                    image.style.width = '100px';
+                    image.style.height = '75px';
+                    image.style.width = '75px';
                     image.id = "img";
                     image.setAttribute("onclick",`window.open("https://www.discogs.com/master/${collection[i].basic_information.master_id}", '_blank')`);
 
