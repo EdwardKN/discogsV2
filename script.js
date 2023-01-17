@@ -120,7 +120,7 @@ function loadSave(){
         customNotes = JSON.parse(localStorage.getItem("notes"));
         value = JSON.parse(localStorage.getItem("worth"));
     
-        if(collection === null){
+        if(collection === null || folders === null || customNotes === null || value === null){
             location.href = './login.html';
             collection = [];
             customNotes = {fields:[]};
