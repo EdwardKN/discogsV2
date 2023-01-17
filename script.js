@@ -188,7 +188,6 @@ function requestHttp(httpCallback){
 
 function startLoading(){
     document.getElementById("loading").style.width = "50%";
-    document.getElementById("reload").style.visibility = "hidden";
     columns.row.forEach(column => {
         try{column.lastSearch = document.getElementById(column.name).value}catch{};
     });
@@ -203,7 +202,6 @@ function startLoading(){
 
 function stopLoading(){
     document.getElementById("loading").style.width = "0%";
-    document.getElementById("reload").style.visibility = "visible";
 };
 
 function reload(){
