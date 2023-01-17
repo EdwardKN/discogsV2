@@ -409,6 +409,9 @@ function createAllRows(){
                     }else if(column.name === "Skivomslag"){
                         let image = document.createElement("img");
                         image.src = deep_value(collection[i],column.path);
+                        image.onerror = function(){
+                            image.src.replace(/\?.+/,"") + "?" + new Date().getTime();
+                        }
                         image.style.height = '100px';
                         image.style.width = '100px';
                         image.id = "img";
