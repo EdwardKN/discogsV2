@@ -491,8 +491,16 @@ function compareValues(order, type, path) {
         
         let comparison = 0;
         if(type === "string" || type === "object"){
-            var bandA =  JSON.stringify(Object.byString(a, path)).toUpperCase();
-            var bandB = JSON.stringify(Object.byString(b, path)).toUpperCase();
+            var bandA;
+            var bandB;
+            try{
+                bandA =  (Object.byString(a, path)).toUpperCase();
+                bandB = (Object.byString(b, path)).toUpperCase();
+            }catch{
+                bandA =  (Object.byString(a, path))
+                bandB = (Object.byString(b, path))
+            }
+
             
             
             if (bandA > bandB) {

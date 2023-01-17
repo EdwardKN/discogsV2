@@ -58,3 +58,10 @@ a:link , a:visited {
 h1{
   padding-left: 10px;
 }
+
+#Mapp{
+  width: 100%;
+}
+#Betyg{
+  width: 90%;
+}
