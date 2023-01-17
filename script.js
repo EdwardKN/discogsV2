@@ -131,7 +131,7 @@ function loadSave(){
     }
 };
 
-function httpRequest(url, callback, headers){
+function httpRequest(url, callback){
 
     const http = new XMLHttpRequest();   
     http.open("GET", url);
