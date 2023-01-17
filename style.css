@@ -55,25 +55,13 @@ a:link , a:visited {
     transform: translate(-50%, -50%);    
   }
 
-
-
-
-  #reload{
-    width: 25%;
-    cursor: pointer;
-    padding: 15px;
-    font-family: inherit;
-    font-size: 16px;
-    border: 1;
-    border-radius: 10px;
-    margin: 0 auto;
-    display: block;
-
-    float: right; 
-    position: relative;  
-    top:-10px;
-    right: 10px;
-  }
 h1{
   padding-left: 10px;
+}
+
+#Mapp{
+  width: 100%;
+}
+#Betyg{
+  width: 90%;
 }

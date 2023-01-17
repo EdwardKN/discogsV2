@@ -1,6 +1,7 @@
 document.getElementById("username").value = localStorage.getItem("username");
 document.getElementById("token").value = localStorage.getItem("token");
-if(localStorage.getItem("token") == undefined){
+
+if(localStorage.getItem("collection") == undefined){
     document.getElementById("back").style.visibility = "hidden";
 }else{
     document.getElementById("back").style.visibility = "visible";

@@ -13,14 +13,6 @@ var columns = {
             filterType:"select",
             lastSearch:"",
             input:"",
-        },{
-            name:"Titel",
-            type:"string",
-            path:"basic_information.title",
-            filterType:"text",
-            lastSearch:"",
-            input:"",
-            filterAlgorithm:"StartsWith"
         },{  
             name:"Artist",
             type:"object",
@@ -31,7 +23,15 @@ var columns = {
             input:"",
             filterAlgorithm:"Includes"
         },{
-            name:"År",
+            name:"Titel",
+            type:"string",
+            path:"basic_information.title",
+            filterType:"text",
+            lastSearch:"",
+            input:"",
+            filterAlgorithm:"StartsWith"
+        },{
+            name:"Pressningsår",
             type:"number",
             path:"basic_information.year",
             filterType:"text",
@@ -49,6 +49,14 @@ var columns = {
             name:"Genre",
             type:"string",
             path:"basic_information.genres",
+            filterType:"text",
+            lastSearch:"",
+            input:"",
+            filterAlgorithm:"Includes"
+        },{
+            name:"Stil",
+            type:"string",
+            path:"basic_information.styles",
             filterType:"text",
             lastSearch:"",
             input:"",
@@ -123,7 +131,7 @@ function loadSave(){
     }
 };
 
-function httpRequest(url, callback, headers){
+function httpRequest(url, callback){
 
     const http = new XMLHttpRequest();   
     http.open("GET", url);
@@ -180,7 +188,6 @@ function requestHttp(httpCallback){
 
 function startLoading(){
     document.getElementById("loading").style.width = "50%";
-    document.getElementById("reload").style.visibility = "hidden";
     columns.row.forEach(column => {
         try{column.lastSearch = document.getElementById(column.name).value}catch{};
     });
@@ -195,7 +202,6 @@ function startLoading(){
 
 function stopLoading(){
     document.getElementById("loading").style.width = "0%";
-    document.getElementById("reload").style.visibility = "visible";
 };
 
 function reload(){
@@ -254,11 +260,21 @@ function createFirstRows(){
     columns.row.forEach(column => {
         column.rows = [];
         let thisThing = document.createElement("td");
-        thisThing.setAttribute("onclick",`sortCollection('${column.path}','${column.type}','${column.objectPath}')`);
+        if(column.filterType !== "none"){
+            thisThing.setAttribute("onclick",`sortCollection('${column.path}','${column.type}','${column.objectPath}')`);
+        }
+        if(column.name == "Skivomslag"){
+            let tmpbutton = document.createElement("button")
+            tmpbutton.innerText = "Ladda om"
+            tmpbutton.setAttribute("onclick",`location.href = './login.html';`);
 
-        column.rows.push(thisThing);
-        thisThing.innerText = column.name;
+            thisThing.appendChild(tmpbutton);
+        }else{
+            column.rows.push(thisThing);
+            thisThing.innerText = column.name;
+        }
         columns.rows[0].appendChild(thisThing);
+
 
         let thisThing2 = document.createElement("td");
         column.rows.push(thisThing2);
@@ -409,7 +425,7 @@ function createAllRows(){
                         thisThing.innerText = deep_value(collection[i],column.path);
                     };
                 };
-                
+
                 if(column.type === "object"){
                     deep_value(collection[i],column.path).forEach(function(text, idx){
                         if(column.name === "Artist"){
@@ -483,8 +499,16 @@ function compareValues(order, type, path) {
         
         let comparison = 0;
         if(type === "string" || type === "object"){
-            var bandA =  JSON.stringify(Object.byString(a, path)).toUpperCase();
-            var bandB = JSON.stringify(Object.byString(b, path)).toUpperCase();
+            var bandA;
+            var bandB;
+            try{
+                bandA =  (Object.byString(a, path)).toUpperCase();
+                bandB = (Object.byString(b, path)).toUpperCase();
+            }catch{
+                bandA =  (Object.byString(a, path))
+                bandB = (Object.byString(b, path))
+            }
+
             
             
             if (bandA > bandB) {
@@ -562,20 +586,3 @@ var reduce = function(arr, prop) {
 
     return result;
   };
-
-
-  function getCookie(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
