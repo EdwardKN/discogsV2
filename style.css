@@ -6,9 +6,8 @@ table {
   }
 
 #table td, #customers th {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
+  border: 1px solid rgba(27, 31, 35, 0.3);
+}
   
   #table tr:nth-child(even){background-color: #f2f2f2;}
   
@@ -19,10 +18,16 @@ table {
     background-color: #04AA6D;
     color: white;    
     width:fit-content;
+    
   }
 
   input {
-    width: 90%;
+    display: block;
+    width: 100%;
+    padding: 2px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    border: 1px solid rgba(27, 31, 35, 1);
 
   }
   td { 
@@ -61,17 +66,25 @@ h1{
 
 #Mapp{
   width: 100%;
+  padding: 2px;
+  border-radius: 6px;
+  border: 1px solid rgba(27, 31, 35, 1);
+
 
 }
 #Betyg{
   width: 90%;
+  padding: 2px;
+  border-radius: 6px;
+  border: 1px solid rgba(27, 31, 35, 1);
+
 }
 
 /* CSS */
 button {
   appearance: none;
   background-color: #FAFBFC;
-  border: 1px solid rgba(27, 31, 35, 0.15);
+  border: 1px solid rgba(27, 31, 35, 1);
   border-radius: 6px;
   box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
   box-sizing: border-box;
@@ -83,7 +96,7 @@ button {
   font-weight: 500;
   line-height: 20px;
   list-style: none;
-  padding: 6px 16px;
+  padding: 2px 16px;
   position: relative;
   transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
   user-select: none;
