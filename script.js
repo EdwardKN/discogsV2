@@ -13,14 +13,6 @@ var columns = {
             filterType:"select",
             lastSearch:"",
             input:"",
-        },{
-            name:"Titel",
-            type:"string",
-            path:"basic_information.title",
-            filterType:"text",
-            lastSearch:"",
-            input:"",
-            filterAlgorithm:"StartsWith"
         },{  
             name:"Artist",
             type:"object",
@@ -30,6 +22,14 @@ var columns = {
             lastSearch:"",
             input:"",
             filterAlgorithm:"Includes"
+        },{
+            name:"Titel",
+            type:"string",
+            path:"basic_information.title",
+            filterType:"text",
+            lastSearch:"",
+            input:"",
+            filterAlgorithm:"StartsWith"
         },{
             name:"År",
             type:"number",
