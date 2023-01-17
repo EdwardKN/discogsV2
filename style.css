@@ -6,12 +6,12 @@ table {
   }
 
 #table td, #customers th {
-  border: 1px solid rgba(27, 31, 35, 0.3);
+  border: 1px solid rgba(27, 31, 35, 0);
 }
   
-  #table tr:nth-child(even){background-color: #f2f2f2;}
+  #table tr:nth-child(even){background-color: #E6E6E6;}
   
-  #table tr:hover {background-color: #ddd;}
+  #table tr:hover {background-color: rgb(207, 207, 207);}
   
   #table th {
     text-align: left;
@@ -21,6 +21,10 @@ table {
     
   }
 
+  #firstrows {
+    background-color: #E6E6E6;
+  }
+  
   input {
     display: block;
     width: 100%;

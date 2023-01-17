@@ -256,6 +256,8 @@ function createFirstRows(){
     columns.rows = [];
     columns.rows.push(document.createElement("tr"));
     columns.rows.push(document.createElement("tr"));
+    columns.rows[0].id = "firstrows";
+    columns.rows[1].id = "firstrows";
 
     columns.row.forEach(column => {
         column.rows = [];
