@@ -371,37 +371,45 @@ function createAllRows(){
                 let thisThing = document.createElement("a");
                 let thisThing2 = document.createElement("td");
                 column.rows.push(thisThing);
-                if(column.type === "string" || column.type === "number"){
+                if(column.type === "string" || column.type === "number" || column.type === "img"){
                     if(column.name === "Betyg"){
                         for(let y=0; y<collection[i].rating;y++){
                             thisThing.innerText += "★"; 
                         };
                     }else if(column.name === "Datum tillagd"){
                         thisThing.innerText = deep_value(collection[i],column.path).split("T")[0];
+                        thisThing.setAttribute("href",  "#");
+                        thisThing.setAttribute("onclick",  'document.getElementById("'+column.name+'").value = this.innerText;reloadTable()'); 
+
                     }else if(column.name === "Mapp"){
                         folders.forEach(folder => {
                             if(folder.id === deep_value(collection[i],column.path)){
                                 thisThing.innerText = folder.name;
                             };
                         });
-                    }else{
+                        thisThing.setAttribute("href",  "#");
+                        thisThing.setAttribute("onclick",  'document.getElementById("'+column.name+'").value = '+deep_value(collection[i],column.path)+';reloadTable()'); 
+                    
+                    }else if(column.name === "Skivomslag"){
+                        let image = document.createElement("img");
+                        image.src = deep_value(collection[i],column.path);
+                        image.style.height = '100px';
+                        image.style.width = '100px';
+                        image.id = "img";
+                        image.setAttribute("onclick",`window.open("https://www.discogs.com/master/${collection[i].basic_information.master_id}", '_blank')`);
+    
+                        thisThing.appendChild(image);
+                    }else if(column.name === "Titel"){
                         thisThing.innerText = deep_value(collection[i],column.path);
-                        if(column.name === "Titel"){
-                            thisThing.setAttribute("href",  "https://www.discogs.com/release/"+collection[i].basic_information.id);
-                            thisThing.setAttribute("target","_blank");
-                        };
+                        thisThing.setAttribute("href",  "https://www.discogs.com/release/"+collection[i].basic_information.id);
+                        thisThing.setAttribute("target","_blank");
+                    }else{
+                        thisThing.setAttribute("href",  "#");
+                        thisThing.setAttribute("onclick",  'document.getElementById("'+column.name+'").value = this.innerText;reloadTable()'); 
+                        thisThing.innerText = deep_value(collection[i],column.path);
                     };
                 };
-                if(column.type === "img"){
-                    let image = document.createElement("img");
-                    image.src = deep_value(collection[i],column.path);
-                    image.style.height = '100px';
-                    image.style.width = '100px';
-                    image.id = "img";
-                    image.setAttribute("onclick",`window.open("https://www.discogs.com/master/${collection[i].basic_information.master_id}", '_blank')`);
-
-                    thisThing.appendChild(image);
-                };
+                
                 if(column.type === "object"){
                     deep_value(collection[i],column.path).forEach(function(text, idx){
                         if(column.name === "Artist"){
