@@ -94,11 +94,7 @@ var token;
 
 
 window.addEventListener("load",function(){
-    if(localStorage.getItem("collection") == 'undefined'){
-        load();
-    }else{
-        loadSave();
-    };
+    loadSave();
 });
 
 function save(){
