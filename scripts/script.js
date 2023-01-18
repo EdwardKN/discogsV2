@@ -261,7 +261,8 @@ function createFirstRows(){
 
     columns.row.forEach(column => {
         column.rows = [];
-        let thisThing = document.createElement("td");
+        let thisThing3 = document.createElement("td");
+        let thisThing = document.createElement("a");
         if(column.filterType !== "none"){
             thisThing.setAttribute("onclick",`sortCollection('${column.path}','${column.type}','${column.objectPath}')`);
         }
@@ -275,7 +276,10 @@ function createFirstRows(){
             column.rows.push(thisThing);
             thisThing.innerText = column.name;
         }
-        columns.rows[0].appendChild(thisThing);
+        
+        thisThing.setAttribute("href",  "#");
+        thisThing3.appendChild(thisThing);
+        columns.rows[0].appendChild(thisThing3);
 
 
         let thisThing2 = document.createElement("td");
@@ -558,23 +562,7 @@ function compareValues(order, type, path) {
   var sortOrder = 1;
   function sortCollection(path,type,objectpath){
     
-    if(lastPath === path){
-        sortOrder *= -1;
-    }else{
-        lastPath = path;
-        if(type === "string"){
-            sortOrder = 1;
-        }else{
-            sortOrder = -1;
-        };
-    };
-    if(type === "object"){
-        path = path+"[0]."+objectpath;
-    };
-
-    if(path === "basic_information.genres"){
-        path =  "basic_information.genres[0]";
-    };
+    sortOrder *= -1;
 
     collection.sort(compareValues(sortOrder,type,path,objectpath));
     reloadTable();
