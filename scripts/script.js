@@ -18,7 +18,7 @@ var columns = {
             type:"object",
             path:"basic_information.artists",
             objectPath:"name",
-            filterType:"text",
+            filterType:"array",
             lastSearch:"",
             input:"",
             filterAlgorithm:"Includes"
@@ -49,7 +49,7 @@ var columns = {
             name:"Genre",
             type:"array",
             path:"basic_information.genres",
-            filterType:"text",
+            filterType:"array",
             lastSearch:"",
             input:"",
             filterAlgorithm:"Includes"
@@ -57,7 +57,7 @@ var columns = {
             name:"Stil",
             type:"array",
             path:"basic_information.styles",
-            filterType:"text",
+            filterType:"array",
             lastSearch:"",
             input:"",
             filterAlgorithm:"Includes"
@@ -281,9 +281,10 @@ function createFirstRows(){
         let thisThing2 = document.createElement("td");
         column.rows.push(thisThing2);
         if(column.filterType !== "none"){
-            if(column.filterType === "text"){
+            if(column.filterType === "text" || column.filterType === "array"){
                 column.input = document.createElement("input");
                 column.input.setAttribute("type","text");
+    
             }else{
                 column.input = document.createElement("select");
                 if(column.name === "Mapp"){
@@ -374,6 +375,13 @@ function createAllRows(){
                         };
                     };
                 };
+            }else if(column.filterType === "array"){
+                column.input.value.split(",").forEach(input1 => {
+                    if(JSON.stringify(deep_value(collection[i],column.path)).toLowerCase().includes(input1.toLowerCase())){
+                    }else{
+                        collection[i].notOk = true;
+                    };
+                })
             };
         });
         customNotes.fields.forEach(note => {
@@ -436,7 +444,7 @@ function createAllRows(){
 
                             thisThing2.childNodes.forEach(links => {
                                 if(links.nodeName === "A"){
-                                    links.setAttribute("onclick",  'document.getElementById("'+column.name+'").value = this.innerText;reloadTable()'); 
+                                    links.setAttribute("onclick",  'document.getElementById("'+column.name+'").value += "," + this.innerText;reloadTable()'); 
                                 };
                             });
 
