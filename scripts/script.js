@@ -26,7 +26,7 @@ var columns = {
             name:"Titel",
             type:"string",
             path:"basic_information.title",
-            filterType:"text",
+            filterType:"array",
             lastSearch:"",
             input:"",
             filterAlgorithm:"StartsWith"
@@ -34,7 +34,7 @@ var columns = {
             name:"Pressningsår",
             type:"number",
             path:"basic_information.year",
-            filterType:"text",
+            filterType:"array",
             lastSearch:"",
             input:"",
             filterAlgorithm:"StartsWith"
@@ -66,7 +66,7 @@ var columns = {
             type:"object",
             path:"basic_information.labels",
             objectPath:"name",
-            filterType:"text",
+            filterType:"array",
             lastSearch:"",
             input:"",
             filterAlgorithm:"Includes"
@@ -74,7 +74,7 @@ var columns = {
             name:"Datum tillagd",
             type:"string",
             path:"date_added",
-            filterType:"text",
+            filterType:"array",
             lastSearch:"",
             input:"",
             filterAlgorithm:"Includes"
@@ -328,10 +328,12 @@ function createFirstRows(){
 
     });
     for(let i = 0; i< customNotes.fields.length; i++){
-
-        let thisThing = document.createElement("td");
+        let thisThing3 = document.createElement("td");
+        let thisThing = document.createElement("a");
         thisThing.innerText = customNotes.fields[i].name;
+        thisThing.setAttribute("href",  "#");
         thisThing.setAttribute("onclick",`sortCollection('notes[${i}].value','string','')`);
+        thisThing3.appendChild(thisThing)
 
         let thisThing2 = document.createElement("td");
         customNotes.fields[i].input = document.createElement("input");
@@ -343,7 +345,7 @@ function createFirstRows(){
 
         columns.rows[1].appendChild(thisThing2);
 
-        columns.rows[0].appendChild(thisThing);
+        columns.rows[0].appendChild(thisThing3);
     };
     table.appendChild(columns.rows[0]);
     table.appendChild(columns.rows[1]);
@@ -376,18 +378,34 @@ function createAllRows(){
                     };
                 };
             }else if(column.filterType === "array"){
+                let tmp = true
                 column.input.value.split(",").forEach(input1 => {
-                    if(JSON.stringify(deep_value(collection[i],column.path)).toLowerCase().includes(input1.toLowerCase())){
-                    }else{
-                        collection[i].notOk = true;
-                    };
+                    if(JSON.stringify(deep_value(collection[i],column.path)).toLowerCase().includes(input1.toLowerCase()) && input1.toLowerCase() !== ""){
+                        tmp = false;
+                    }
                 })
+                if(column.input.value == ""){
+                    tmp = false;
+                }
+                if(tmp == true){
+                    collection[i].notOk = true;
+                }
             };
         });
         customNotes.fields.forEach(note => {
-            if((collection[i].notes[note.id-1].value.toLowerCase().startsWith(note.input.value.toLowerCase()))){}else{
-                collection[i].notOk = true;
-            };
+                let tmp = true
+                note.input.value.split(",").forEach(input1 => {
+                    if(collection[i].notes[note.id-1].value.toLowerCase().includes(input1.toLowerCase()) && input1.toLowerCase() !== ""){
+                        tmp = false;
+                    }
+                })
+                if(note.input.value == ""){
+                    tmp = false;
+                }
+                if(tmp == true){
+                    collection[i].notOk = true;
+                }
+
         });
         }catch(e){};   
         if(collection[i].notOk != true){
@@ -418,9 +436,15 @@ function createAllRows(){
                     
                     }else if(column.name === "Skivomslag"){
                         let image = document.createElement("img");
-                        image.src = deep_value(collection[i],column.path);
-                        image.onerror = function(){
-                            image.src.replace(/\?.+/,"") + "?" + new Date().getTime();
+                        let path = deep_value(collection[i],column.path) + "?token=" + token;
+                        image.src = path;
+                        image.onerror = function(e){
+                            image.src = "../images/loading.gif"
+                            image.onload = function(){
+                                setTimeout(() => {
+                                    image.src = path
+                                }, 1000 + Math.random() * 60000);
+                            }
                         }
                         image.style.height = '100px';
                         image.style.width = '100px';
