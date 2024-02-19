@@ -410,6 +410,7 @@ function createAllRows() {
         } catch (e) { };
         if (collection[i].notOk != true) {
             columns.rows.push(document.createElement("tr"));
+            columns.rows[columns.rows.length - 1].id = i;
             columns.row.forEach(column => {
 
                 let thisThing = document.createElement("a");
@@ -514,7 +515,7 @@ function createAllRows() {
             };
         };
     };
-
+    latestLoadId++;
     loadImage();
 };
 
@@ -621,16 +622,27 @@ var reduce = function (arr, prop) {
     return result;
 };
 
-function loadImage(row = 1) {
-    if (row > columns.rows.length);
+var latestLoadId = 0;
+
+function loadImage(row = 1, loadId = latestLoadId) {
+    if (row >= columns.rows.length - 1 || loadId !== latestLoadId) return;
     let column = columns.row[0];
 
     let img = column.rows[row].children[0];
-    let path = deep_value(collection[row - 1], column.path) + "?token=" + token;
+
+    let id = columns.rows[row + 1].id;
+    let path = deep_value(collection[JSON.parse(id)], column.path) + "?token=" + token;
 
     img.src = path;
-
     img.onload = () => {
-        loadImage(row + 1);
+        setTimeout(() => {
+            loadImage(row + 1, loadId);
+        }, 10);
+    }
+    img.onerror = () => {
+        img.src = "../images/loading.gif"
+        setTimeout(() => {
+            loadImage(row, loadId);
+        }, 5000);
     }
 }   
