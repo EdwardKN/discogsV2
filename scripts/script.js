@@ -442,6 +442,7 @@ function createAllRows() {
                         image.style.height = '100px';
                         image.style.width = '100px';
                         image.id = "img";
+                        image.className = "image";
                         image.setAttribute("onclick", `window.open("https://www.discogs.com/master/${collection[i].basic_information.master_id}", '_blank')`);
 
                         thisThing.appendChild(image);
@@ -516,9 +517,35 @@ function createAllRows() {
         };
     };
     latestLoadId++;
-    loadImage();
+    //loadImage();
+
+
+    setInterval(() => {
+        Array.from(document.getElementsByClassName("image")).forEach((element, index) => {
+            if (isElementInViewport(element) && element.src.endsWith("loading.gif")) {
+                loadImage(index + 1, latestLoadId);
+            }
+        })
+    }, 100)
+
+
 };
 
+function isElementInViewport(el) {
+
+    if (typeof jQuery === "function" && el instanceof jQuery) {
+        el = el[0];
+    }
+
+    var rect = el.getBoundingClientRect();
+
+    return (
+        rect.top >= -window.innerHeight / 10 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight * 1.1 || document.documentElement.clientHeight) && /* or $(window).height() */
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+    );
+}
 
 
 function resetFilters() {
@@ -634,15 +661,15 @@ function loadImage(row = 1, loadId = latestLoadId) {
     let path = deep_value(collection[JSON.parse(id)], column.path) + "?token=" + token;
 
     img.src = path;
-    img.onload = () => {
+    /*img.onload = () => {
         setTimeout(() => {
             loadImage(row + 1, loadId);
         }, 10);
-    }
+    }*/
     img.onerror = () => {
         img.src = "../images/loading.gif"
         setTimeout(() => {
             loadImage(row, loadId);
-        }, 5000);
+        }, 1000);
     }
 }   
